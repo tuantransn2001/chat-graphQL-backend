@@ -8,15 +8,18 @@ import {
 } from '@nestjs/graphql';
 import { ChatroomService } from './chatroom.service';
 import { UserService } from 'src/user/user.service';
-import { GraphQLErrorFilter } from 'src/filters/custom-exception.filter';
+import { GraphQLErrorFilter } from 'src/commons/filters/custom-exception.filter';
 import { UseFilters, UseGuards } from '@nestjs/common';
 import { GraphqlAuthGuard } from 'src/auth/graphql-auth.guard';
-import { Chatroom, Message } from './chatroom.types';
+
 import { Request } from 'express';
 import { PubSub } from 'graphql-subscriptions';
-import { User } from 'src/user/user.type';
+import { User } from 'src/user/types/user.type';
 
 import * as GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
+import { RESPONSE_MESSAGE } from 'src/commons/constants/response.message';
+import { Message } from './types/message.type';
+import { Chatroom } from './types/chatroom.type';
 
 @Resolver()
 export class ChatroomResolver {
@@ -154,6 +157,6 @@ export class ChatroomResolver {
   @Mutation(() => String)
   async deleteChatroom(@Args('chatroomId') chatroomId: number) {
     await this.chatroomService.deleteChatroom(chatroomId);
-    return 'Chatroom deleted successfully';
+    return RESPONSE_MESSAGE.CHAT_ROOM_DELETED_SUCCESSFULLY;
   }
 }

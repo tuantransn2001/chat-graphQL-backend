@@ -7,6 +7,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
+import { RESPONSE_MESSAGE } from 'src/commons/constants/response.message';
 
 @Injectable()
 export class GraphqlAuthGuard implements CanActivate {
@@ -21,16 +22,16 @@ export class GraphqlAuthGuard implements CanActivate {
     const token = this.extractTokenFromCookie(request);
 
     if (!token) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException(
+        RESPONSE_MESSAGE.NO_TOKEN_FOUND_IN_COOKIES,
+      );
     }
-    try {
-      const payload = await this.jwtService.verifyAsync(token, {
-        secret: this.configService.get<string>('ACCESS_TOKEN_SECRET'),
-      });
 
+    try {
+      const payload = await this.verifyToken(token);
       request['user'] = payload;
     } catch (err) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException(RESPONSE_MESSAGE.INVALID_TOKEN);
     }
 
     return true;
@@ -38,5 +39,11 @@ export class GraphqlAuthGuard implements CanActivate {
 
   private extractTokenFromCookie(request: Request): string | undefined {
     return request.cookies?.access_token;
+  }
+
+  private async verifyToken(token: string) {
+    return this.jwtService.verifyAsync(token, {
+      secret: this.configService.get<string>('ACCESS_TOKEN_SECRET'),
+    });
   }
 }

@@ -2,7 +2,6 @@ import * as dotenv from 'dotenv';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
-
 import * as graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.js';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 
