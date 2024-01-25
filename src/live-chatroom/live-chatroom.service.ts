@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
-import { User } from '../user/user.type';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class LiveChatroomService {

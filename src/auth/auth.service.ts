@@ -8,8 +8,10 @@ import { PrismaService } from '../prisma.service';
 import { ConfigService } from '@nestjs/config';
 import { Request, Response } from 'express';
 import { User } from '@prisma/client';
-import { LoginDto, RegisterDto } from './dto';
 import * as bcrypt from 'bcrypt';
+import { RESPONSE_MESSAGE } from 'src/commons/constants/response.message';
+import { LoginDto } from './dtos/login.dto';
+import { RegisterDto } from './dtos/register.dto';
 @Injectable()
 export class AuthService {
   constructor(
@@ -18,11 +20,11 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
-  async refreshToken(req: Request, res: Response) {
+  public async refreshToken(req: Request, res: Response) {
     const refreshToken = req.cookies['refresh_token'];
 
     if (!refreshToken) {
-      throw new UnauthorizedException('Refresh token not found');
+      throw new UnauthorizedException(RESPONSE_MESSAGE.REFRESH_TOKEN_NOT_FOUND);
     }
     let payload;
 
@@ -31,14 +33,16 @@ export class AuthService {
         secret: this.configService.get<string>('REFRESH_TOKEN_SECRET'),
       });
     } catch (error) {
-      throw new UnauthorizedException('Invalid or expired refresh token');
+      throw new UnauthorizedException(
+        RESPONSE_MESSAGE.INVALID_OR_EXPIRED_REFRESH_TOKEN,
+      );
     }
     const userExists = await this.prisma.user.findUnique({
       where: { id: payload.sub },
     });
 
     if (!userExists) {
-      throw new BadRequestException('User no longer exists');
+      throw new BadRequestException(RESPONSE_MESSAGE.USER_NO_LONGER_EXISTS);
     }
 
     const expiresIn = 15000;
@@ -75,7 +79,7 @@ export class AuthService {
     return { user };
   }
 
-  async validateUser(loginDto: LoginDto) {
+  public async validateUser(loginDto: LoginDto) {
     const user = await this.prisma.user.findUnique({
       where: { email: loginDto.email },
     });
@@ -84,12 +88,14 @@ export class AuthService {
     }
     return null;
   }
-  async register(registerDto: RegisterDto, response: Response) {
+  public async register(registerDto: RegisterDto, response: Response) {
     const existingUser = await this.prisma.user.findUnique({
       where: { email: registerDto.email },
     });
     if (existingUser) {
-      throw new BadRequestException({ email: 'Email already in use' });
+      throw new BadRequestException({
+        email: RESPONSE_MESSAGE.EMAIL_ALREADY_IN_USE,
+      });
     }
     const hashedPassword = await bcrypt.hash(registerDto.password, 10);
     const user = await this.prisma.user.create({
@@ -102,18 +108,18 @@ export class AuthService {
     return this.issueTokens(user, response);
   }
 
-  async login(loginDto: LoginDto, response: Response) {
+  public async login(loginDto: LoginDto, response: Response) {
     const user = await this.validateUser(loginDto);
     if (!user) {
       throw new BadRequestException({
-        invalidCredentials: 'Invalid credentials',
+        invalidCredentials: RESPONSE_MESSAGE.INVALID_CREDENTIALS,
       });
     }
     return this.issueTokens(user, response);
   }
-  async logout(response: Response) {
+  public async logout(response: Response) {
     response.clearCookie('access_token');
     response.clearCookie('refresh_token');
-    return 'Successfully logged out';
+    return RESPONSE_MESSAGE.SUCCESSFULLY_LOGGED_OUT;
   }
 }

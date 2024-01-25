@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createWriteStream } from 'fs';
+import { RESPONSE_MESSAGE } from 'src/commons/constants/response.message';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
@@ -25,7 +26,9 @@ export class ChatroomService {
       },
     });
     if (existingChatroom) {
-      throw new BadRequestException({ name: 'Chatroom already exists' });
+      throw new BadRequestException({
+        name: RESPONSE_MESSAGE.CHAT_ROOM_ALREADY_EXISTS,
+      });
     }
     return this.prisma.chatroom.create({
       data: {
@@ -46,7 +49,9 @@ export class ChatroomService {
       },
     });
     if (!existingChatroom) {
-      throw new BadRequestException({ chatroomId: 'Chatroom does not exist' });
+      throw new BadRequestException({
+        chatroomId: RESPONSE_MESSAGE.CHAT_ROOM_DO_NOT_EXIST,
+      });
     }
 
     return await this.prisma.chatroom.update({
