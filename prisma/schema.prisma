@@ -20,6 +20,21 @@ model User {
   chatrooms       Chatroom[]      @relation("ChatroomUsers")
   messages        Message[]
   ChatroomUsers   ChatroomUsers[]
+  userRole        UserRole[]
+}
+
+model UserRole {
+  id     Int  @id @default(autoincrement())
+  userId Int
+  roleId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role   Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+}
+
+model Role {
+  id        Int        @id @default(autoincrement())
+  roleName  String?
+  userRoles UserRole[]
 }
 
 model Chatroom {

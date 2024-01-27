@@ -22,4 +22,5 @@ export class User {
 
   @Field({ nullable: true })
   updatedAt?: Date;
+  userRole: any;
 }

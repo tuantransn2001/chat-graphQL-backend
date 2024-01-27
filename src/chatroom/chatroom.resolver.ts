@@ -8,7 +8,7 @@ import {
 } from '@nestjs/graphql';
 import { ChatroomService } from './chatroom.service';
 import { UserService } from 'src/user/user.service';
-import { GraphQLErrorFilter } from 'src/commons/filters/custom-exception.filter';
+import { GraphQLErrorFilter } from '@common/filters/custom-exception.filter';
 import { UseFilters, UseGuards } from '@nestjs/common';
 import { GraphqlAuthGuard } from 'src/auth/graphql-auth.guard';
 
@@ -17,9 +17,10 @@ import { PubSub } from 'graphql-subscriptions';
 import { User } from 'src/user/types/user.type';
 
 import * as GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
-import { RESPONSE_MESSAGE } from 'src/commons/constants/response.message';
+import { RESPONSE_MESSAGE } from '@common/constants/response.message';
 import { Message } from './types/message.type';
 import { Chatroom } from './types/chatroom.type';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
 @Resolver()
 export class ChatroomResolver {
@@ -27,6 +28,7 @@ export class ChatroomResolver {
   constructor(
     private readonly chatroomService: ChatroomService,
     private readonly userService: UserService,
+    private readonly cloundinaryService: CloudinaryService,
   ) {
     this.pubSub = new PubSub();
   }
@@ -108,7 +110,9 @@ export class ChatroomResolver {
     image?: GraphQLUpload,
   ) {
     let imagePath = null;
-    if (image) imagePath = await this.chatroomService.saveImage(image);
+
+    if (image) imagePath = await this.cloundinaryService.saveImage(image);
+
     const newMessage = await this.chatroomService.sendMessage(
       chatroomId,
       content,

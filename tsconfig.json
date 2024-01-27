@@ -16,6 +16,14 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "*": ["node_modules/*", "src/types/*"],
+      "src/*": ["src/*"],
+      "@common/*": ["src/common/*"],
+      "@share/*": ["src/share/*"],
+      "@db/*": ["src/db/*"],
+      "@modules/*": ["src/modules/*"]
+    }
   }
 }

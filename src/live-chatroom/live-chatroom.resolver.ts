@@ -7,7 +7,7 @@ import { Subscription, Args, Context, Mutation } from '@nestjs/graphql';
 import { Request } from 'express';
 import { UseFilters, UseGuards } from '@nestjs/common';
 import { GraphqlAuthGuard } from 'src/auth/graphql-auth.guard';
-import { GraphQLErrorFilter } from 'src/commons/filters/custom-exception.filter';
+import { GraphQLErrorFilter } from '@common/filters/custom-exception.filter';
 @Resolver()
 export class LiveChatroomResolver {
   private pubSub: PubSub;
