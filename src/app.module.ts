@@ -12,6 +12,7 @@ import { RedisPubSub } from 'graphql-redis-subscriptions';
 import { TokenService } from './token/token.service';
 import { ChatroomModule } from './chatroom/chatroom.module';
 import { LiveChatroomModule } from './live-chatroom/live-chatroom.module';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 
 const pubSub = new RedisPubSub({
   connection: {
@@ -76,6 +77,7 @@ const pubSub = new RedisPubSub({
     }),
     ChatroomModule,
     LiveChatroomModule,
+    CloudinaryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

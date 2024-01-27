@@ -3,8 +3,8 @@ import { AuthService } from './auth.service';
 
 import { BadRequestException, UseFilters } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { GraphQLErrorFilter } from 'src/commons/filters/custom-exception.filter';
-import { RESPONSE_MESSAGE } from 'src/commons/constants/response.message';
+import { GraphQLErrorFilter } from '@common/filters/custom-exception.filter';
+import { RESPONSE_MESSAGE } from '@common/constants/response.message';
 
 import { LoginResponse } from './types/login-response.type';
 import { RegisterDto } from './dtos/register.dto';

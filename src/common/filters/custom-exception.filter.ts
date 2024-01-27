@@ -2,7 +2,7 @@ import { ApolloError } from 'apollo-server-express';
 import { Catch, BadRequestException } from '@nestjs/common';
 
 import { GqlExceptionFilter } from '@nestjs/graphql';
-import { RESPONSE_MESSAGE } from 'src/commons/constants/response.message';
+import { RESPONSE_MESSAGE } from '@common/constants/response.message';
 @Catch(BadRequestException)
 export class GraphQLErrorFilter implements GqlExceptionFilter {
   catch(exception: BadRequestException) {

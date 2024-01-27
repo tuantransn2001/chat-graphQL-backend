@@ -9,7 +9,7 @@ import { ConfigService } from '@nestjs/config';
 import { Request, Response } from 'express';
 import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
-import { RESPONSE_MESSAGE } from 'src/commons/constants/response.message';
+import { RESPONSE_MESSAGE } from '@common/constants/response.message';
 import { LoginDto } from './dtos/login.dto';
 import { RegisterDto } from './dtos/register.dto';
 @Injectable()

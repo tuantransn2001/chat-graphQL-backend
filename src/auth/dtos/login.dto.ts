@@ -1,6 +1,6 @@
 import { InputType, Field } from '@nestjs/graphql';
 import { IsEmail, IsNotEmpty } from 'class-validator';
-import { RESPONSE_MESSAGE } from 'src/commons/constants/response.message';
+import { RESPONSE_MESSAGE } from '@common/constants/response.message';
 
 @InputType()
 export class LoginDto {

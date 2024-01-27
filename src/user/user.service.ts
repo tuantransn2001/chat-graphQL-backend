@@ -78,6 +78,13 @@ export class UserService {
       where: {
         id: userId,
       },
+      include: {
+        userRole: {
+          select: {
+            role: true,
+          },
+        },
+      },
     });
   }
 }
