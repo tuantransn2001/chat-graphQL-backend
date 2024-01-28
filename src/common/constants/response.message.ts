@@ -24,4 +24,5 @@ export const RESPONSE_MESSAGE = {
   VALIDATION_ERROR: 'Validation error',
   VALIDATION_ERROR_CODE: 'VALIDATION_ERROR',
   BAD_REQUEST: 'Bad Request',
+  INVALID_FILE_TYPE: 'Invalid file type',
 };
