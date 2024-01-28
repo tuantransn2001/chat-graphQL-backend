@@ -7,6 +7,7 @@ import { join } from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import * as GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
 import { ConfigService } from '@nestjs/config';
+import { RESPONSE_MESSAGE } from 'src/common/constants/response.message';
 @Injectable()
 export class CloudinaryService {
   constructor(private readonly configService: ConfigService) {}
@@ -28,21 +29,25 @@ export class CloudinaryService {
     const { createReadStream, filename } = await file;
     const uniqueFilename = `${uuidv4()}_${filename}`;
     const imagePath = join(process.cwd(), 'public', 'images', uniqueFilename);
-    const imageUrl = `${process.env.APP_URL}/images/${uniqueFilename}`;
+    const imageUrl = `${this.configService.get(
+      'APP_URL',
+    )}/images/${uniqueFilename}`;
     const readStream = createReadStream();
     readStream.pipe(createWriteStream(imagePath));
     return imageUrl;
   }
-  
+
   async saveImage(image: {
     createReadStream: () => any;
     filename: string;
     mimetype: string;
   }) {
-    const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    const VALID_IMAGE_TYPE = ['image/jpeg', 'image/png', 'image/gif'];
 
-    if (!validImageTypes.includes(image.mimetype)) {
-      throw new BadRequestException({ image: 'Invalid image type' });
+    if (!VALID_IMAGE_TYPE.includes(image.mimetype)) {
+      throw new BadRequestException({
+        image: RESPONSE_MESSAGE.INVALID_FILE_TYPE,
+      });
     }
     const imageName = `${Date.now()}-${image.filename}`;
     const imagePath = `${this.configService.get('IMAGE_PATH')}/${imageName}`;
